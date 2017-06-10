@@ -4,7 +4,7 @@ from alexafsm.session_attributes import SessionAttributes
 
 
 PLAIN_TEXT = 'PlainText'
-SSML = 'ssml'
+SSML = 'SSML'
 
 
 def _format_text(text_to_format, text_type):
@@ -13,7 +13,7 @@ def _format_text(text_to_format, text_type):
     elif text_type == SSML:
         return '<speak>' + text_to_format + '</speak>'
 
-    raise ValueError(f'text_type must be {PLAIN_TEXT} or {SSML}')
+    raise ValueError(f'text_type {text_type} is not {PLAIN_TEXT} or {SSML}')
 
 
 class Response(namedtuple('Response', ['speech', 'card', 'card_content', 'reprompt', 'should_end',
@@ -33,7 +33,7 @@ class Response(namedtuple('Response', ['speech', 'card', 'card_content', 'reprom
         """Build entire Alexa response as a JSON-serializable dictionary"""
         card = None
 
-        text_type = 'text' if self.output_speech_type == PLAIN_TEXT else SSML
+        text_type_key = 'text' if self.output_speech_type == PLAIN_TEXT else SSML.lower()
 
         if self.card:
             if self.image:
@@ -55,13 +55,13 @@ class Response(namedtuple('Response', ['speech', 'card', 'card_content', 'reprom
         resp = {
             'outputSpeech': {
                 'type': self.output_speech_type,
-                text_type: _format_text(self.speech, self.output_speech_type)
+                text_type_key: _format_text(self.speech, self.output_speech_type)
             },
             'card': card,
             'reprompt': {
                 'outputSpeech': {
                     'type': self.output_speech_type,
-                    text_type: _format_text(self.reprompt, self.output_speech_type)
+                    text_type_key: _format_text(self.reprompt, self.output_speech_type)
                 }
             },
             'shouldEndSession': self.should_end
