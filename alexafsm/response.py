@@ -4,6 +4,15 @@ from alexafsm.session_attributes import SessionAttributes
 
 
 PLAIN_TEXT = 'PlainText'
+SSML = 'ssml'
+
+
+def _format_text(text_to_format, text_type):
+    if text_type == PLAIN_TEXT:
+        return text_to_format
+    elif text_type == SSML:
+        return '<speak>' + text_to_format + '</speak>'
+
 
 class Response(namedtuple('Response', ['speech', 'card', 'card_content', 'reprompt', 'should_end',
                                        'image', 'session_attributes', 'output_speech_type'])):
@@ -22,7 +31,7 @@ class Response(namedtuple('Response', ['speech', 'card', 'card_content', 'reprom
         """Build entire Alexa response as a JSON-serializable dictionary"""
         card = None
 
-        text_type = 'text' if self.output_speech_type == PLAIN_TEXT else 'ssml'
+        text_type = 'text' if self.output_speech_type == PLAIN_TEXT else SSML
 
         if self.card:
             if self.image:
@@ -44,13 +53,13 @@ class Response(namedtuple('Response', ['speech', 'card', 'card_content', 'reprom
         resp = {
             'outputSpeech': {
                 'type': self.output_speech_type,
-                text_type: self.speech
+                text_type: _format_text(self.speech, text_type)
             },
             'card': card,
             'reprompt': {
                 'outputSpeech': {
                     'type': self.output_speech_type,
-                    text_type: self.reprompt
+                    text_type: _format_text(self.reprompt, text_type)
                 }
             },
             'shouldEndSession': self.should_end
