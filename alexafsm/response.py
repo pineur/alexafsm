@@ -4,11 +4,11 @@ from alexafsm.session_attributes import SessionAttributes
 
 
 class Response(namedtuple('Response', ['speech', 'card', 'card_content', 'reprompt', 'should_end',
-                                       'image', 'session_attributes'])):
+                                       'image', 'session_attributes', 'output_speech_type'])):
     """Pythonic representation of the response to be sent to Alexa"""
     def __new__(cls, speech: str, reprompt: str, card: str = None, should_end: bool = False,
                 card_content: str = None, image: str = None,
-                session_attributes: SessionAttributes = SessionAttributes()):
+                session_attributes: SessionAttributes = SessionAttributes(), output_speech_type: str = 'PlainText'):
         if not card_content:
             card_content = speech
         return super(Response, cls) \
@@ -39,14 +39,16 @@ class Response(namedtuple('Response', ['speech', 'card', 'card_content', 'reprom
 
         resp = {
             'outputSpeech': {
-                'type': 'PlainText',
-                'text': self.speech
+                'type': self.output_speech_type,
+                'text': self.speech,
+                'ssml': self.speech
             },
             'card': card,
             'reprompt': {
                 'outputSpeech': {
-                    'type': 'PlainText',
-                    'text': self.reprompt
+                    'type': self.output_speech_type,
+                    'text': self.reprompt,
+                    'ssml': self.speech
                 }
             },
             'shouldEndSession': self.should_end
