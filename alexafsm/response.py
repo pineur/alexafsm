@@ -13,6 +13,8 @@ def _format_text(text_to_format, text_type):
     elif text_type == SSML:
         return '<speak>' + text_to_format + '</speak>'
 
+    raise ValueError(f'text_type must be {PLAIN_TEXT} or {SSML}')
+
 
 class Response(namedtuple('Response', ['speech', 'card', 'card_content', 'reprompt', 'should_end',
                                        'image', 'session_attributes', 'output_speech_type'])):
@@ -53,13 +55,13 @@ class Response(namedtuple('Response', ['speech', 'card', 'card_content', 'reprom
         resp = {
             'outputSpeech': {
                 'type': self.output_speech_type,
-                text_type: _format_text(self.speech, text_type)
+                text_type: _format_text(self.speech, self.output_speech_type)
             },
             'card': card,
             'reprompt': {
                 'outputSpeech': {
                     'type': self.output_speech_type,
-                    text_type: _format_text(self.reprompt, text_type)
+                    text_type: _format_text(self.reprompt, self.output_speech_type)
                 }
             },
             'shouldEndSession': self.should_end
