@@ -48,7 +48,7 @@ class Response(namedtuple('Response', ['speech', 'card', 'card_content', 'reprom
                 'outputSpeech': {
                     'type': self.output_speech_type,
                     'text': self.reprompt,
-                    'ssml': self.speech
+                    'ssml': self.reprompt
                 }
             },
             'shouldEndSession': self.should_end
