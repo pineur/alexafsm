@@ -16,7 +16,7 @@ class Response(namedtuple('Response', ['speech', 'card', 'card_content', 'reprom
         return super(Response, cls) \
             .__new__(cls, speech=speech, card=card, reprompt=reprompt, should_end=should_end,
                      card_content=card_content.strip(), image=image,
-                     session_attributes=session_attributes)
+                     session_attributes=session_attributes, output_speech_type=output_speech_type)
 
     def to_json(self):
         """Build entire Alexa response as a JSON-serializable dictionary"""
