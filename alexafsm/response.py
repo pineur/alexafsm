@@ -3,12 +3,14 @@ from collections import namedtuple
 from alexafsm.session_attributes import SessionAttributes
 
 
+PLAIN_TEXT = 'PlainText'
+
 class Response(namedtuple('Response', ['speech', 'card', 'card_content', 'reprompt', 'should_end',
                                        'image', 'session_attributes', 'output_speech_type'])):
     """Pythonic representation of the response to be sent to Alexa"""
     def __new__(cls, speech: str, reprompt: str, card: str = None, should_end: bool = False,
                 card_content: str = None, image: str = None,
-                session_attributes: SessionAttributes = SessionAttributes(), output_speech_type: str = 'PlainText'):
+                session_attributes: SessionAttributes = SessionAttributes(), output_speech_type: str = PLAIN_TEXT):
         if not card_content:
             card_content = speech
         return super(Response, cls) \
@@ -19,6 +21,8 @@ class Response(namedtuple('Response', ['speech', 'card', 'card_content', 'reprom
     def to_json(self):
         """Build entire Alexa response as a JSON-serializable dictionary"""
         card = None
+
+        text_type = 'text' if self.output_speech_type == PLAIN_TEXT else 'ssml'
 
         if self.card:
             if self.image:
@@ -40,15 +44,13 @@ class Response(namedtuple('Response', ['speech', 'card', 'card_content', 'reprom
         resp = {
             'outputSpeech': {
                 'type': self.output_speech_type,
-                'text': self.speech,
-                'ssml': self.speech
+                text_type: self.speech
             },
             'card': card,
             'reprompt': {
                 'outputSpeech': {
                     'type': self.output_speech_type,
-                    'text': self.reprompt,
-                    'ssml': self.reprompt
+                    text_type: self.reprompt
                 }
             },
             'shouldEndSession': self.should_end
