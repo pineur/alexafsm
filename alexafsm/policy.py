@@ -93,6 +93,7 @@ class Policy:
 
         if request_type == 'LaunchRequest':
             resp = self.get_current_state_response()
+            resp = resp._replace(session_attributes=self.states.attributes)
         elif request_type == 'IntentRequest':
             intent = req['intent']
             self.states.attributes = type(self.states.attributes).from_request(request)
