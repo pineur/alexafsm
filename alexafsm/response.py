@@ -77,9 +77,12 @@ class Response(namedtuple('Response', ['speech', 'card', 'card_content', 'reprom
         }
 
 
-def end(skill_name: str) -> Response:
+def end(skill_name: str, speech: str = None) -> Response:
+    if speech is None:
+        speech = f"Thank you for using {skill_name}"
+
     return Response(
-        speech=f"Thank you for using {skill_name}",
+        speech=speech,
         reprompt="",
         should_end=True)
 
