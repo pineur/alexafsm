@@ -21,7 +21,7 @@ class Response(namedtuple('Response', ['speech', 'card', 'card_content', 'reprom
     """Pythonic representation of the response to be sent to Alexa"""
     def __new__(cls, speech: str, reprompt: str, card: str = None, should_end: bool = False,
                 card_content: str = None, image: str = None,
-                session_attributes: SessionAttributes = SessionAttributes(), output_speech_type: str = PLAIN_TEXT):
+                session_attributes: SessionAttributes = SessionAttributes(), output_speech_type: str = SSML):
         if not card_content:
             card_content = speech
         return super(Response, cls) \
@@ -88,6 +88,6 @@ def end(skill_name: str, speech: str = None) -> Response:
 
 
 NOT_UNDERSTOOD = Response(
-    speech="I did not understand your response, please say it differently.",
+    speech="I did not understand your response, please <break strength=\"weak\" /> say it differently.",
     reprompt="Please respond in a different way."
 )
