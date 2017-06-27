@@ -11,9 +11,6 @@ class SessionAttributes:
     # slots_cls = Slots
     slots_cls = None
 
-    # List of (big) fields we don't want to send back to Alexa
-    not_sent_fields = []
-
     def __init__(self, intent: str = None, slots=None, state: str = INITIAL_STATE):
         self.intent = intent
         self.slots = slots
@@ -57,7 +54,7 @@ class SessionAttributes:
         When sending the payload to Alexa, do not send fields that are too big.
         """
         return {k: v for k, v in self.__dict__.items()
-                if k not in self.not_sent_fields and v is not None}
+                if v is not None}
 
 
 def _slots_from_dict(slots_cls, slots: dict):
