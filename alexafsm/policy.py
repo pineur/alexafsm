@@ -63,6 +63,7 @@ class Policy:
         try:
             # trigger is added by transitions library
             self.trigger(intent)
+            self._delete_temporary_attributes()
             current_state = self.state
             logger.info(f"Changed from {previous_state} to {current_state} through {intent}")
             self.attributes.state = current_state
@@ -77,6 +78,10 @@ class Policy:
                 reprompt=state_response.reprompt,
             )
             return not_understood_response
+
+    def _delete_temporary_attributes(self):
+        for temp_attr in self.attributes.temporary_attributes:
+            delattr(self.state, temp_attr)
 
     def handle(self, request: dict, voice_insights: VoiceInsights = None,
                record_filename: str = None):
