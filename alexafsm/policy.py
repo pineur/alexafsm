@@ -72,8 +72,11 @@ class Policy:
             # reset attributes
             self.states.attributes = attributes_backup
             state_response = self.get_current_state_response()
-            state_response.speech = f'{response.NOT_UNDERSTOOD}<break/>{state_response.reprompt}'
-            return state_response
+            not_understood_response = response.Response(
+                speech=f'{response.NOT_UNDERSTOOD}<break/>{state_response.reprompt}',
+                reprompt=state_response.reprompt,
+            )
+            return not_understood_response
 
     def handle(self, request: dict, voice_insights: VoiceInsights = None,
                record_filename: str = None):
