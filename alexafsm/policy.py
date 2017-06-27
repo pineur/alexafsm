@@ -81,7 +81,7 @@ class Policy:
 
     def _delete_temporary_attributes(self):
         for temp_attr in self.attributes.temporary_attributes:
-            delattr(self.state, temp_attr)
+            delattr(self.attributes, temp_attr)
 
     def handle(self, request: dict, voice_insights: VoiceInsights = None,
                record_filename: str = None):
