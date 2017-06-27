@@ -87,7 +87,4 @@ def end(skill_name: str, speech: str = None) -> Response:
         should_end=True)
 
 
-NOT_UNDERSTOOD = Response(
-    speech="I did not understand your response, please <break strength=\"weak\" /> say it differently.",
-    reprompt="Please respond in a different way."
-)
+NOT_UNDERSTOOD = "I did not understand your response, please <break strength=\"weak\" /> say it differently."

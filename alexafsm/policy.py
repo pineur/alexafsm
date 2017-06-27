@@ -71,7 +71,9 @@ class Policy:
             logger.error(str(exception))
             # reset attributes
             self.states.attributes = attributes_backup
-            return response.NOT_UNDERSTOOD
+            state_response = self.get_current_state_response()
+            state_response.speech = f'{response.NOT_UNDERSTOOD}<break/>{state_response.reprompt}'
+            return state_response
 
     def handle(self, request: dict, voice_insights: VoiceInsights = None,
                record_filename: str = None):
